@@ -61,7 +61,7 @@ var mqtt =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 28);
+/******/ 	return __webpack_require__(__webpack_require__.s = 29);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -882,9 +882,9 @@ function nextTick(fn, arg1, arg2, arg3) {
 
 
 
-var base64 = __webpack_require__(31)
-var ieee754 = __webpack_require__(32)
-var isArray = __webpack_require__(33)
+var base64 = __webpack_require__(32)
+var ieee754 = __webpack_require__(33)
+var isArray = __webpack_require__(34)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2782,19 +2782,6 @@ function objectToString(o) {
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(15);
-exports.Stream = exports;
-exports.Readable = exports;
-exports.Writable = __webpack_require__(18);
-exports.Duplex = __webpack_require__(4);
-exports.Transform = __webpack_require__(20);
-exports.PassThrough = __webpack_require__(40);
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -2819,8 +2806,8 @@ exports.PassThrough = __webpack_require__(40);
 
 
 
-var punycode = __webpack_require__(55);
-var util = __webpack_require__(57);
+var punycode = __webpack_require__(56);
+var util = __webpack_require__(58);
 
 exports.parse = urlParse;
 exports.resolve = urlResolve;
@@ -2895,7 +2882,7 @@ var protocolPattern = /^([a-z0-9.+-]+:)/i,
       'gopher:': true,
       'file:': true
     },
-    querystring = __webpack_require__(58);
+    querystring = __webpack_require__(59);
 
 function urlParse(url, parseQueryString, slashesDenoteHost) {
   if (url && util.isObject(url) && url instanceof Url) return url;
@@ -3531,88 +3518,28 @@ Url.prototype.parseHost = function() {
 
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-module.exports = extend
-
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-
-function extend() {
-    var target = {}
-
-    for (var i = 0; i < arguments.length; i++) {
-        var source = arguments[i]
-
-        for (var key in source) {
-            if (hasOwnProperty.call(source, key)) {
-                target[key] = source[key]
-            }
-        }
-    }
-
-    return target
-}
-
-
-/***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-var tls = __webpack_require__(62)
-
-function buildBuilder (mqttClient, opts) {
-  var connection
-  opts.port = opts.port || 8883
-  opts.host = opts.hostname || opts.host || 'localhost'
-
-  opts.rejectUnauthorized = opts.rejectUnauthorized !== false
-
-  delete opts.path
-
-  connection = tls.connect(opts)
-  /* eslint no-use-before-define: [2, "nofunc"] */
-  connection.on('secureConnect', function () {
-    if (opts.rejectUnauthorized && !connection.authorized) {
-      connection.emit('error', new Error('TLS not authorized'))
-    } else {
-      connection.removeListener('error', handleTLSerrors)
-    }
-  })
-
-  function handleTLSerrors (err) {
-    // How can I get verify this error is a tls error?
-    if (opts.rejectUnauthorized) {
-      mqttClient.emit('error', err)
-    }
-
-    // close this connection to match the behaviour of net
-    // otherwise all we get is an error from the connection
-    // and close event doesn't fire. This is a work around
-    // to enable the reconnect code to work the same as with
-    // net.createConnection
-    connection.end()
-  }
-
-  connection.on('error', handleTLSerrors)
-  return connection
-}
-
-module.exports = buildBuilder
+exports = module.exports = __webpack_require__(15);
+exports.Stream = exports;
+exports.Readable = exports;
+exports.Writable = __webpack_require__(18);
+exports.Duplex = __webpack_require__(4);
+exports.Transform = __webpack_require__(20);
+exports.PassThrough = __webpack_require__(41);
 
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process, global) {
 
-var Transform = __webpack_require__(9).Transform
-var duplexify = __webpack_require__(63)
-var WS = __webpack_require__(65)
+var Transform = __webpack_require__(10).Transform
+var duplexify = __webpack_require__(64)
+var WS = __webpack_require__(66)
 var Buffer = __webpack_require__(3).Buffer
 
 module.exports = WebSocketStream
@@ -3791,6 +3718,79 @@ function WebSocketStream(target, protocols, options) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(1)))
 
 /***/ }),
+/* 12 */
+/***/ (function(module, exports) {
+
+module.exports = extend
+
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+
+function extend() {
+    var target = {}
+
+    for (var i = 0; i < arguments.length; i++) {
+        var source = arguments[i]
+
+        for (var key in source) {
+            if (hasOwnProperty.call(source, key)) {
+                target[key] = source[key]
+            }
+        }
+    }
+
+    return target
+}
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var tls = __webpack_require__(63)
+
+function buildBuilder (mqttClient, opts) {
+  var connection
+  opts.port = opts.port || 8883
+  opts.host = opts.hostname || opts.host || 'localhost'
+
+  opts.rejectUnauthorized = opts.rejectUnauthorized !== false
+
+  delete opts.path
+
+  connection = tls.connect(opts)
+  /* eslint no-use-before-define: [2, "nofunc"] */
+  connection.on('secureConnect', function () {
+    if (opts.rejectUnauthorized && !connection.authorized) {
+      connection.emit('error', new Error('TLS not authorized'))
+    } else {
+      connection.removeListener('error', handleTLSerrors)
+    }
+  })
+
+  function handleTLSerrors (err) {
+    // How can I get verify this error is a tls error?
+    if (opts.rejectUnauthorized) {
+      mqttClient.emit('error', err)
+    }
+
+    // close this connection to match the behaviour of net
+    // otherwise all we get is an error from the connection
+    // and close event doesn't fire. This is a work around
+    // to enable the reconnect code to work the same as with
+    // net.createConnection
+    connection.end()
+  }
+
+  connection.on('error', handleTLSerrors)
+  return connection
+}
+
+module.exports = buildBuilder
+
+
+/***/ }),
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3800,9 +3800,9 @@ function WebSocketStream(target, protocols, options) {
 /**
  * Module dependencies
  */
-var xtend = __webpack_require__(11)
+var xtend = __webpack_require__(12)
 
-var Readable = __webpack_require__(9).Readable
+var Readable = __webpack_require__(10).Readable
 var streamsOpts = { objectMode: true }
 var defaultStoreOptions = {
   clean: true
@@ -3959,7 +3959,7 @@ var processNextTick = __webpack_require__(6);
 module.exports = Readable;
 
 /*<replacement>*/
-var isArray = __webpack_require__(30);
+var isArray = __webpack_require__(31);
 /*</replacement>*/
 
 /*<replacement>*/
@@ -3999,7 +3999,7 @@ util.inherits = __webpack_require__(2);
 /*</replacement>*/
 
 /*<replacement>*/
-var debugUtil = __webpack_require__(34);
+var debugUtil = __webpack_require__(35);
 var debug = void 0;
 if (debugUtil && debugUtil.debuglog) {
   debug = debugUtil.debuglog('stream');
@@ -4008,7 +4008,7 @@ if (debugUtil && debugUtil.debuglog) {
 }
 /*</replacement>*/
 
-var BufferList = __webpack_require__(35);
+var BufferList = __webpack_require__(36);
 var destroyImpl = __webpack_require__(17);
 var StringDecoder;
 
@@ -5099,7 +5099,7 @@ util.inherits = __webpack_require__(2);
 
 /*<replacement>*/
 var internalUtil = {
-  deprecate: __webpack_require__(38)
+  deprecate: __webpack_require__(39)
 };
 /*</replacement>*/
 
@@ -5691,7 +5691,7 @@ Writable.prototype._destroy = function (err, cb) {
   this.end();
   cb(err);
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(36).setImmediate, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(37).setImmediate, __webpack_require__(1)))
 
 /***/ }),
 /* 19 */
@@ -5700,7 +5700,7 @@ Writable.prototype._destroy = function (err, cb) {
 "use strict";
 
 
-var Buffer = __webpack_require__(39).Buffer;
+var Buffer = __webpack_require__(40).Buffer;
 
 var isEncoding = Buffer.isEncoding || function (encoding) {
   encoding = '' + encoding;
@@ -6195,7 +6195,7 @@ function done(stream, er, data) {
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var once = __webpack_require__(41);
+var once = __webpack_require__(42);
 
 var noop = function() {};
 
@@ -6409,7 +6409,7 @@ var protocol = __webpack_require__(22)
 var Buffer = __webpack_require__(3).Buffer
 var empty = Buffer.allocUnsafe(0)
 var zeroBuf = Buffer.from([0])
-var numbers = __webpack_require__(52)
+var numbers = __webpack_require__(53)
 var nextTick = __webpack_require__(6)
 
 var numCache = numbers.cache
@@ -6991,7 +6991,7 @@ module.exports = generate
 
 "use strict";
 
-var net = __webpack_require__(61)
+var net = __webpack_require__(62)
 
 /*
   variables port and host can be removed since
@@ -7077,8 +7077,8 @@ function WebSocket (url, protocols) {
   return ws
 }
 
-var websocket = __webpack_require__(13)
-var urlModule = __webpack_require__(10)
+var websocket = __webpack_require__(11)
+var urlModule = __webpack_require__(9)
 
 function buildUrl (opts, client) {
   var protocol = opts.protocol === 'wxs' ? 'wss' : 'ws'
@@ -7210,8 +7210,8 @@ function WebSocket (url, protocols) {
   return ws
 }
 
-var websocket = __webpack_require__(13)
-var urlModule = __webpack_require__(10)
+var websocket = __webpack_require__(11)
+var urlModule = __webpack_require__(9)
 
 function buildUrl (opts, client) {
   var protocol = opts.protocol === 'egrets' ? 'wss' : 'ws'
@@ -7283,10 +7283,137 @@ module.exports = buildBuilder
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+var Event  = Laya.Event;
+var Socket = Laya.Socket;
+var Byte   = Laya.Byte;
+/* global wx */
+var socketOpen = false
+var socket=null
+function sendSocketMessage (msg) {
+  socket.send(msg);
+  socket.flush();
+}
+
+function WebSocket (url, protocols) {
+  socket = new Socket();
+  var ws = {
+    OPEN: 1,
+    CLOSING: 2,
+    CLOSED: 3,
+    readyState: socketOpen ? 1 : 0,
+    send: sendSocketMessage,
+    close: socket.close,
+    onopen: null,
+    onmessage: null,
+    onclose: null,
+    onerror: null
+  }
+  socket.on(Event.OPEN, this, function (res) {
+    ws.readyState = ws.OPEN
+    socketOpen = true
+    ws.onopen && ws.onopen.apply(ws, arguments)
+  });
+  socket.on(Event.CLOSE, this, function () {
+    ws.onclose && ws.onclose.apply(ws, arguments)
+    ws.readyState = ws.CLOSED
+    socketOpen = false
+  });
+  socket.on(Event.MESSAGE, this, function (message) {
+    console.log(Object.prototype.toString.call(message));
+    var event=new Object();
+    event.data=message
+    ws.onmessage && ws.onmessage.call(ws, event)
+  });
+  socket.on(Event.ERROR, this, function () {
+    ws.onerror && ws.onerror.apply(ws, arguments)
+    ws.readyState = ws.CLOSED
+    socketOpen = false
+  });
+  //连接服务器
+  socket.protocols=protocols
+  socket.endian=Socket.BIG_ENDIAN
+  socket.connectByUrl(url);
+  return ws
+}
+
+var websocket = __webpack_require__(11)
+var urlModule = __webpack_require__(9)
+
+function buildUrl (opts, client) {
+  var protocol = opts.protocol === 'layas' ? 'wss' : 'ws'
+  var url = protocol + '://' + opts.hostname + ':' + opts.port + opts.path
+  if (typeof (opts.transformWsUrl) === 'function') {
+    url = opts.transformWsUrl(url, opts, client)
+  }
+  return url
+}
+
+function setDefaultOpts (opts) {
+  if (!opts.hostname) {
+    opts.hostname = 'localhost'
+  }
+  if (!opts.port) {
+    if (opts.protocol === 'wss') {
+      opts.port = 443
+    } else {
+      opts.port = 80
+    }
+  }
+  if (!opts.path) {
+    opts.path = '/'
+  }
+
+  if (!opts.wsOptions) {
+    opts.wsOptions = {}
+  }
+}
+
+function createWebSocket (client, opts) {
+  var websocketSubProtocol =
+    (opts.protocolId === 'MQIsdp') && (opts.protocolVersion === 3)
+      ? 'mqttv3.1'
+      : 'mqtt'
+
+  setDefaultOpts(opts)
+  var url = buildUrl(opts, client)
+  return websocket(WebSocket(url, [websocketSubProtocol]))
+}
+
+function buildBuilder (client, opts) {
+  if (!opts.hostname) {
+    opts.hostname = opts.host
+  }
+
+  if (!opts.hostname) {
+    // Throwing an error in a Web Worker if no `hostname` is given, because we
+    // can not determine the `hostname` automatically.  If connecting to
+    // localhost, please supply the `hostname` as an argument.
+    if (typeof (document) === 'undefined') {
+      throw new Error('Could not determine host. Specify host manually.')
+    }
+    var parsed = urlModule.parse(document.URL)
+    opts.hostname = parsed.hostname
+
+    if (!opts.port) {
+      opts.port = parsed.port
+    }
+  }
+  return createWebSocket(client, opts)
+}
+
+module.exports = buildBuilder
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var websocket = __webpack_require__(13)
-var urlModule = __webpack_require__(10)
+var websocket = __webpack_require__(11)
+var urlModule = __webpack_require__(9)
 var WSS_OPTIONS = [
   'rejectUnauthorized',
   'ca',
@@ -7379,34 +7506,38 @@ if (IS_BROWSER) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var MqttClient = __webpack_require__(29)
+var MqttClient = __webpack_require__(30)
 var Store = __webpack_require__(14)
-var url = __webpack_require__(10)
-var xtend = __webpack_require__(11)
+var url = __webpack_require__(9)
+var xtend = __webpack_require__(12)
 var protocols = {}
 
 if (process.title !== 'browser') {
   protocols.mqtt = __webpack_require__(24)
   protocols.tcp = __webpack_require__(24)
-  protocols.ssl = __webpack_require__(12)
-  protocols.tls = __webpack_require__(12)
-  protocols.mqtts = __webpack_require__(12)
+  protocols.ssl = __webpack_require__(13)
+  protocols.tls = __webpack_require__(13)
+  protocols.mqtts = __webpack_require__(13)
 } else {
   protocols.wx = __webpack_require__(25)
   protocols.wxs = __webpack_require__(25)
 
   protocols.egret = __webpack_require__(26)
   protocols.egrets = __webpack_require__(26)
+
+  protocols.laya = __webpack_require__(27)
+  protocols.layas = __webpack_require__(27)
+
 }
 
-protocols.ws = __webpack_require__(27)
-protocols.wss = __webpack_require__(27)
+protocols.ws = __webpack_require__(28)
+protocols.wss = __webpack_require__(28)
 
 /**
  * Parse the auth attribute and merge username and password in the options object.
@@ -7464,7 +7595,7 @@ function connect (brokerUrl, opts) {
 
   if (opts.cert && opts.key) {
     if (opts.protocol) {
-      if (['mqtts', 'wss', 'wxs','egrets'].indexOf(opts.protocol) === -1) {
+      if (['mqtts', 'wss', 'wxs','egrets','layas'].indexOf(opts.protocol) === -1) {
         switch (opts.protocol) {
           case 'mqtt':
             opts.protocol = 'mqtts'
@@ -7477,6 +7608,9 @@ function connect (brokerUrl, opts) {
             break
           case 'egret':
             opts.protocol = 'egrets'
+            break
+          case 'laya':
+            opts.protocol = 'layas'
             break
           default:
             throw new Error('Unknown protocol for secure connection: "' + opts.protocol + '"!')
@@ -7498,7 +7632,9 @@ function connect (brokerUrl, opts) {
       'wx',
       'wxs',
       'egret',
-      'egrets'
+      'egrets',
+      'laya',
+      'layas'
     ].filter(function (key, index) {
       if (isSecure && index % 2 === 0) {
         // Skip insecure protocols when requesting a secure one.
@@ -7539,7 +7675,7 @@ module.exports.Store = Store
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7551,12 +7687,12 @@ module.exports.Store = Store
 var events = __webpack_require__(5)
 var Store = __webpack_require__(14)
 var eos = __webpack_require__(21)
-var mqttPacket = __webpack_require__(43)
-var Writable = __webpack_require__(9).Writable
+var mqttPacket = __webpack_require__(44)
+var Writable = __webpack_require__(10).Writable
 var inherits = __webpack_require__(2)
-var reInterval = __webpack_require__(53)
-var validations = __webpack_require__(54)
-var xtend = __webpack_require__(11)
+var reInterval = __webpack_require__(54)
+var validations = __webpack_require__(55)
+var xtend = __webpack_require__(12)
 var setImmediate = global.setImmediate || function (callback) {
   // works in node v0.8
   process.nextTick(callback)
@@ -8615,7 +8751,7 @@ module.exports = MqttClient
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(0)))
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -8626,7 +8762,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8747,7 +8883,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -8837,7 +8973,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -8848,13 +8984,13 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8934,7 +9070,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -8987,13 +9123,13 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(37);
+__webpack_require__(38);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -9186,7 +9322,7 @@ exports.clearImmediate = clearImmediate;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(0)))
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {
@@ -9260,7 +9396,7 @@ function config (name) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* eslint-disable node/no-deprecated-api */
@@ -9328,7 +9464,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9381,10 +9517,10 @@ PassThrough.prototype._transform = function (chunk, encoding, cb) {
 };
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var wrappy = __webpack_require__(42)
+var wrappy = __webpack_require__(43)
 module.exports = wrappy(once)
 module.exports.strict = wrappy(onceStrict)
 
@@ -9429,7 +9565,7 @@ function onceStrict (fn) {
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports) {
 
 // Returns a wrapper function that returns a wrapped callback
@@ -9468,28 +9604,28 @@ function wrappy (fn, cb) {
 
 
 /***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.parser = __webpack_require__(44)
-exports.generate = __webpack_require__(51)
-exports.writeToStream = __webpack_require__(23)
-
-
-/***/ }),
 /* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var bl = __webpack_require__(45)
+exports.parser = __webpack_require__(45)
+exports.generate = __webpack_require__(52)
+exports.writeToStream = __webpack_require__(23)
+
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var bl = __webpack_require__(46)
 var inherits = __webpack_require__(2)
 var EE = __webpack_require__(5).EventEmitter
-var Packet = __webpack_require__(50)
+var Packet = __webpack_require__(51)
 var constants = __webpack_require__(22)
 
 function Parser () {
@@ -9862,11 +9998,11 @@ module.exports = Parser
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(Buffer) {var DuplexStream = __webpack_require__(46)
-  , util         = __webpack_require__(47)
+/* WEBPACK VAR INJECTION */(function(Buffer) {var DuplexStream = __webpack_require__(47)
+  , util         = __webpack_require__(48)
 
 
 function BufferList (callback) {
@@ -10149,14 +10285,14 @@ module.exports = BufferList
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7).Buffer))
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(4);
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -10684,7 +10820,7 @@ function isPrimitive(arg) {
 }
 exports.isPrimitive = isPrimitive;
 
-exports.isBuffer = __webpack_require__(48);
+exports.isBuffer = __webpack_require__(49);
 
 function objectToString(o) {
   return Object.prototype.toString.call(o);
@@ -10728,7 +10864,7 @@ exports.log = function() {
  *     prototype.
  * @param {function} superCtor Constructor function to inherit prototype from.
  */
-exports.inherits = __webpack_require__(49);
+exports.inherits = __webpack_require__(50);
 
 exports._extend = function(origin, add) {
   // Don't do anything if add isn't an object
@@ -10749,7 +10885,7 @@ function hasOwnProperty(obj, prop) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(0)))
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports) {
 
 module.exports = function isBuffer(arg) {
@@ -10760,7 +10896,7 @@ module.exports = function isBuffer(arg) {
 }
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports) {
 
 if (typeof Object.create === 'function') {
@@ -10789,7 +10925,7 @@ if (typeof Object.create === 'function') {
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports) {
 
 
@@ -10807,7 +10943,7 @@ module.exports = Packet
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10870,7 +11006,7 @@ module.exports = generate
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10902,7 +11038,7 @@ module.exports = {
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10966,7 +11102,7 @@ module.exports = reInterval;
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11025,7 +11161,7 @@ module.exports = {
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, global) {var __WEBPACK_AMD_DEFINE_RESULT__;/*! https://mths.be/punycode v1.4.1 by @mathias */
@@ -11561,10 +11697,10 @@ module.exports = {
 
 }(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(56)(module), __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(57)(module), __webpack_require__(1)))
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -11592,7 +11728,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11615,18 +11751,18 @@ module.exports = {
 
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-exports.decode = exports.parse = __webpack_require__(59);
-exports.encode = exports.stringify = __webpack_require__(60);
+exports.decode = exports.parse = __webpack_require__(60);
+exports.encode = exports.stringify = __webpack_require__(61);
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11717,7 +11853,7 @@ var isArray = Array.isArray || function (xs) {
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11809,12 +11945,6 @@ var objectKeys = Object.keys || function (obj) {
 
 
 /***/ }),
-/* 61 */
-/***/ (function(module, exports) {
-
-/* (ignored) */
-
-/***/ }),
 /* 62 */
 /***/ (function(module, exports) {
 
@@ -11822,12 +11952,18 @@ var objectKeys = Object.keys || function (obj) {
 
 /***/ }),
 /* 63 */
+/***/ (function(module, exports) {
+
+/* (ignored) */
+
+/***/ }),
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(Buffer, process) {var stream = __webpack_require__(9)
+/* WEBPACK VAR INJECTION */(function(Buffer, process) {var stream = __webpack_require__(10)
 var eos = __webpack_require__(21)
 var inherits = __webpack_require__(2)
-var shift = __webpack_require__(64)
+var shift = __webpack_require__(65)
 
 var SIGNAL_FLUSH = new Buffer([0])
 
@@ -12056,7 +12192,7 @@ module.exports = Duplexify
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7).Buffer, __webpack_require__(0)))
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports) {
 
 module.exports = shift
@@ -12082,7 +12218,7 @@ function getStateLength (state) {
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports) {
 
 
