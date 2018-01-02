@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width = device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable = 0" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="email=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta http-equiv="Content-Type" content="text/html">
+    <meta name="full-screen" content="yes">
+    <meta name="browsermode" content="application">
+    <meta name="x5-page-mode" content="app">
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- UC强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <meta name="apple-mobile-web-app-title" content="妙指社区" />
+    <title>妙指社区</title>
+</head>
+
+</head>
+<body>
+
+<div id="game" class="game">
+
+
+</div>
+<!--<div id="loading" class="loading">-->
+    <!--<div class="process">-->
+        <!--<div class="cs"></div>-->
+    <!--</div>-->
+<!--</div>-->
+</body>
+<script src="{{config.staticPath}}/static/js/lib/layabox/laya.core.js"></script>
+<script src="{{config.staticPath}}/static/js/lib/egret.js"></script>
+<script src="{{config.staticPath}}/static/js/lib/egret.web.js"></script>
+<script src="{{config.staticPath}}/static/js/lib/egret.socket.js"></script>
+<script src="{{config.staticPath}}/static/js/lib/browserMqtt.js"></script>
+<script type="application/javascript">
+    var client = mqtt.connect("ws://127.0.0.1:3653",{
+    //var client = mqtt.connect("egret://127.0.0.1:3653",{
+    //var client = mqtt.connect("laya://127.0.0.1:3653",{
+        protocolId: 'MQIsdp',
+        protocolVersion: 3,
+        reconnectPeriod:0, //不自动重连
+    }) // you add a ws:// url here
+
+    client.sendMessage=function  (msgid,body) {
+        //发送数据
+        //这里是发送消息给服务端，可以先将 msgid 转 topic
+        client.publish("Login/HD_Login/1", body)
+    }.bind(client);
+
+    client.on("message", function (topic, payload) {
+        console.log([topic, payload].join(": "))
+        //这里可以将 topic 转成 msgid 传给上一级代码
+        //client.end()
+    })
+    client.on('connect', function () {
+        //连接成功了，这里可以进行登陆操作
+        client.sendMessage(3001,"{\"userName\":\"xxxxx\", \"passWord\":\"123456\"}")
+    })
+    client.on('reconnect', function () {
+        //当一个重连开始
+    })
+    client.on('close', function () {
+        console.log('close')
+    })
+    client.on('error', function () {
+        console.log('error')
+        console.log(arguments)
+    })
+</script>
+</html>
