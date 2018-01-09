@@ -37,17 +37,18 @@
     <!--</div>-->
 <!--</div>-->
 </body>
-<script src="{{config.staticPath}}/static/js/lib/layabox/laya.core.js"></script>
-<script src="{{config.staticPath}}/static/js/lib/egret.js"></script>
-<script src="{{config.staticPath}}/static/js/lib/egret.web.js"></script>
-<script src="{{config.staticPath}}/static/js/lib/egret.socket.js"></script>
-<script src="{{config.staticPath}}/static/js/lib/browserMqtt.js"></script>
+<!--<script src="{{config.staticPath}}/static/js/lib/layabox/laya.core.js"></script>-->
+<!--<script src="{{config.staticPath}}/static/js/lib/egret.js"></script>-->
+<!--<script src="{{config.staticPath}}/static/js/lib/egret.web.js"></script>-->
+<!--<script src="{{config.staticPath}}/static/js/lib/egret.socket.js"></script>-->
+<script src="https://unpkg.com/mqtt@2.15.0/dist/mqtt.min.js"></script>
 <script type="application/javascript">
     var client = mqtt.connect("ws://127.0.0.1:3653",{
     //var client = mqtt.connect("egret://127.0.0.1:3653",{
     //var client = mqtt.connect("laya://127.0.0.1:3653",{
         protocolId: 'MQIsdp',
         protocolVersion: 3,
+        clientId:'mqttjs_' + Math.random().toString(16).substr(2, 8),
         reconnectPeriod:0, //不自动重连
     }) // you add a ws:// url here
 
