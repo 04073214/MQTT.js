@@ -56,6 +56,12 @@
         //发送数据
         //这里是发送消息给服务端，可以先将 msgid 转 topic
         client.publish("Login/HD_Login/1", body)
+
+        //不能直接传json,mqtt.js库没有自动转义
+//        client.publish('Login/HD_Login/1', {
+//          userName: 'mqtt',
+//          passWord: 'Hello,anyone!'
+//        });
     }.bind(client);
 
     client.on("message", function (topic, payload) {
